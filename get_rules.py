@@ -182,7 +182,9 @@ temp_port = list()
 
 with open('old_rules.json', 'r') as json_file:
     old_rules = json.load(json_file)
-    
+
+
+no = 1   
 rules=list()
 for i in Tmp2:
     if i[6]=='1':
