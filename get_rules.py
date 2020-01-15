@@ -172,10 +172,12 @@ inc=1
    
 def convert_msg(protocol, port):
     print("#",protocol, port)
-    if protocol == 'tcp':
-        return "syn flood attack"
     elif protocol == 'tcp' and port == 80:
         return "sql injection"
+
+    if protocol == 'tcp':
+        return "syn flood attack"
+        
     if protocol == "icmp":
         return "ping attack"
     else:
