@@ -16,7 +16,7 @@ import numpy as np
 def GetAllData(f):
     df = pd.read_csv(f, sep=";")
     print(df.head())
-    df = df[:5000]
+    df = df[:10000]
 #     df_t = df.T
     xx = df.to_numpy()
     print(xx)
