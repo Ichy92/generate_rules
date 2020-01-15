@@ -165,8 +165,8 @@ no=10000000
 inc=1
    
 def convert_msg(protocol, port):
-    print("#",protocol, port)
-    if protocol == 'tcp' and port == 23:
+    # print("#",protocol, port)
+    if protocol == 'tcp':
         return "syn flood attact"
     elif protocol == 'tcp' and port == 80:
         return "sql injection"
@@ -174,7 +174,7 @@ def convert_msg(protocol, port):
         return "ping attack"
     else:
         print(protocol, port)
-        return "<possible attack>"
+        # return "<possible attack>"
     
 temp_ip = list()
 temp_port = list()
