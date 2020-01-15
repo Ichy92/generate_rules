@@ -9,6 +9,7 @@ import json
 #         listTmp.append(row)
 #     return listTmp
  
+jumlah__ = 15
 
 import pandas as pd
 import numpy as np
@@ -111,7 +112,7 @@ for idx, i in enumerate(L1):
         if idx %100 == 0:
             print(".", end="")
         
-    if HitungSama(i,L2)>5:
+    if HitungSama(i,L2)>jumlah__:
         id_used.append(ListData[idx][0])
         if [i[0],i[1],i[2],str(HitungSama(i,L2))] not in ListFinalTmp:
             ListFinalTmp.append([i[0],i[1],i[2],str(HitungSama(i,L2))])
@@ -142,12 +143,13 @@ for idx, i in enumerate(id_final):
     for j in ListFinal:
         if i==j[0]:
              HasilAkhir.append(j)
-# f_out=open("local.rules","w") #ubah a
+
+
 
 try:            
     f_out=open("/etc/snort/rules/local.rules","w") #ubah a
 except:
-    f_out=open("local.rules","w")
+    f_out=open("local.rules","w") 
 
 print("local.rules open")
 
@@ -171,7 +173,7 @@ no=10000000
 inc=1
    
 def convert_msg(protocol, port):
-    print("#",protocol, port)
+    # print("#",protocol, port)
     if protocol == 'tcp':
         return "syn flood attact"
     elif protocol == 'tcp' and port == 80:
@@ -180,25 +182,31 @@ def convert_msg(protocol, port):
         return "ping attack"
     else:
         print(protocol, port)
-        return "<possible attack>"
+        # return "<possible attack>"
     
 temp_ip = list()
 temp_port = list()
 
 with open('old_rules.json', 'r') as json_file:
     old_rules = json.load(json_file)
-    
+
+
+no = 1   
 rules=list()
 for i in Tmp2:
     if i[6]=='1':
         #print(i[4], i[1])
         Tmp.append([i[1],i[2],i[3]])
-        rules.append('alert '+i[1]+' '+i[2]+' any -> '+str(i[3])+' '+str(i[4])+' any (msg: "'+convert_msg(i[1], int(i[4]))+'"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:'+str(no+inc)+');rev: 1;\n')
+        # print(type(i[1]),type(i[2]),type(i[4]),type(i[4]))
+        print(inc)
+        rules.append('alert '+i[1]+' '+i[2]+' any -> '+str(i[3])+' '+str(i[4])+' any (msg: "'+convert_msg(i[1], i[4])+'"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:'+str(no+inc)+');rev: 1;\n')
+        # rules.append('alert '+str(i[1])+' '+str(i[2])+' any -> '+str(i[3])+' '+str(i[4])+' any (msg: "'+convert_msg(i[1], int(i[4]))+'"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:'+str(no+inc)+');rev: 1;\n')
 
         inc=inc+1
     else:
         if [i[1],i[2],i[3]] not in Tmp:
-            rules.append('alert '+i[1]+' '+i[2]+' any -> '+str(i[3])+' '+str(i[4])+' any (msg: "'+convert_msg(i[1], int(i[4]))+'"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:'+str(no+inc)+');rev: 1;\n')
+            rules.append('alert '+i[1]+' '+i[2]+' any -> '+str(i[3])+' '+str(i[4])+' any (msg: "'+convert_msg(i[1], i[4])+'"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:'+str(no+inc)+');rev: 1;\n')
+            # rules.append('alert '+str(i[1])+' '+str(i[2])+' any -> '+str(i[3])+' '+str(i[4])+' any (msg: "'+convert_msg(i[1], int(i[4]))+'"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:'+str(no+inc)+');rev: 1;\n')
         inc=inc+1
         
 rules = list(set(old_rules+rules))
