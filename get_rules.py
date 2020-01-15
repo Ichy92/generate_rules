@@ -142,7 +142,7 @@ for idx, i in enumerate(id_final):
     for j in ListFinal:
         if i==j[0]:
              HasilAkhir.append(j)
-f_out=open("local.rules","w") #ubah a
+f_out=open("/etc/snort/rules/local.rules","w") #ubah a
 print("local.rules open")
 
 Tmp=[[0,0,0,0,0]]
