@@ -9,6 +9,7 @@ import json
 #         listTmp.append(row)
 #     return listTmp
  
+jumlah__ = 15
 
 import pandas as pd
 import numpy as np
@@ -111,7 +112,7 @@ for idx, i in enumerate(L1):
         if idx %100 == 0:
             print(".", end="")
         
-    if HitungSama(i,L2)>5:
+    if HitungSama(i,L2)>jumlah__:
         id_used.append(ListData[idx][0])
         if [i[0],i[1],i[2],str(HitungSama(i,L2))] not in ListFinalTmp:
             ListFinalTmp.append([i[0],i[1],i[2],str(HitungSama(i,L2))])
