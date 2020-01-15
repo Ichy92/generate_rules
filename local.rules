@@ -1,0 +1,6 @@
+alert udp 172.10.1.2 any -> 172.10.1.5 123 any (msg: "<possible attack>"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:10000005);rev: 1;
+alert udp 172.10.1.1 any -> 172.10.1.5 5353 any (msg: "<possible attack>"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:10000001);rev: 1;
+alert icmp 172.10.1.2 any -> 172.10.1.5 8 any (msg: "ping attack"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:10000002);rev: 1;
+alert udp 172.10.1.2 any -> 172.10.1.5 161 any (msg: "<possible attack>"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:10000007);rev: 1;
+alert udp 172.10.1.2 any -> 172.10.1.5 162 any (msg: "<possible attack>"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:10000006);rev: 1;
+alert tcp 172.10.1.2 any -> 172.10.1.5 80 any (msg: "sql injection"; flags:S; thre$; threshold: type threshold, track by_dsr, count 1, second 60; sid:10000003);rev: 1;
