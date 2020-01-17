@@ -17,3 +17,4 @@ lib.save_rules(rules['pingattack'], "ping", alamat)
 print('ping attack!')
 print("*"*100)
 print('success!')
+#ds
