@@ -96,7 +96,7 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
         # flag_dstnya = 'flags:S; thre$; threshold: type threshold, track by_dsc, count 1, second 60'
         # rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, flag_dstnya))
         if msg == "sql injection":
-            opts = 'nocase'
+            opts = 'content:"an$t";nocase'
             rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, opts))
         elif msg == "syn flood attack":
             opts = 'flags:S; threshold: type threshold, track by_dst, count 1, seconds 60'
