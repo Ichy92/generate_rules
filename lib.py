@@ -91,12 +91,24 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
         dest_port = i[3]
         msg = convert_msg(proto, int(dest_port))
 #         print(msg)
-        flag_dstnya = 'flags:S; threshold: type threshold, track by_dst, count 1, seconds 60'
+
         # flag_dstnya = 'threshold: type threshold, track by_dst, count 1, second 60'
         # flag_dstnya = 'flags:S; thre$; threshold: type threshold, track by_dsc, count 1, second 60'
-        rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, flag_dstnya))
+        # rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, flag_dstnya))
+        if msg == "sql injection":
+            opts = 'nocase'
+            rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, opts))
+        elif msg == "syn flood attack":
+            opts = 'flags:S; threshold: type threshold, track by_dst, count 1, seconds 60'
+            rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, opts))
+
+        elif msg == "ping attack":
+            opts = 'icode:0; itype:8; classtype:bad-unknown'
+            rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, opts))
+        else:
+            rule_ = None
         
-        if rule_ not in temp_rule:
+        if rule_ not in temp_rule or rule_ != None:
             if msg == "sql injection":
                 # print(rule_)
                 selected_rule_sqlinjection.append(rule_)
@@ -106,6 +118,7 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
             elif msg == "ping attack":
 #                 print(rule_)
                 selected_rule_pingattack.append(rule_)
+        
 
     # print(len(selected_rule))
     sqlinjection_sid_list = get_sid(sqlinjection_sid, selected_rule_sqlinjection)

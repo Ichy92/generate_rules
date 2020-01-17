@@ -3,9 +3,11 @@ import pandas as pd
 import lib
 alamat = r"/etc/snort/rules/rules_custom"
 df = pd.read_csv("databaru.csv", sep=";")
-final = lib.find_used(df, batas_min = 8)
+final = lib.find_used(df, batas_min = 10)
 rules = lib.get_rules(final, save = False)
-# print(rules['pingattack'])
+print('pingattack', rules['pingattack'])
+print('sqlinjection', rules['sqlinjection'])
+print('synfloodattack', rules['synfloodattack'])
 
 lib.save_rules(rules['sqlinjection'], "sqlinjection", alamat)
 print('sql injection!')
