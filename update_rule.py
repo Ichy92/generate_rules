@@ -1,7 +1,7 @@
 import pandas as pd
 
 import lib
-alamat = r"/etc/snort/rules/rules_custom/"
+alamat = r"etc/snort/rules/rules_custom"
 df = pd.read_csv("databaru.csv", sep=";")
 final = lib.find_used(df, batas_min = 8)
 rules = lib.get_rules(final, save = True)

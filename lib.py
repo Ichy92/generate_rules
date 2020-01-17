@@ -131,7 +131,7 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
 
 def save_rules(rules_list, nama_file, alamat):
     print(nama_file)
-    f_out=open(alamat+".rules","w")
+    f_out=open(alamat+"/"+nama_file+".rules","w")
     for rule in rules_list:
         print(rule)
         f_out.write(rule)

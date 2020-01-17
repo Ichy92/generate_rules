@@ -1,1 +1,1 @@
-[]
+["alert tcp 172.10.1.2 any -> 172.10.1.5 80 any (msg: \"sql injection\"; flags:S; thre$; threshold: type threshold, track by_dsc, count 1, second 60; rev: 1;"]
