@@ -56,7 +56,7 @@ def make_rule(data, sid_list):
 
 def save_json(data, namafile):
     with open(namafile+'.json', 'w') as f:
-        json.dump(sid_list, f)
+        json.dump(data, f)
         
 def open_json(nama_file):
     with open(nama_file+'.json', 'r') as f:
@@ -75,9 +75,9 @@ temp_rule = sqlinjection+synfloodattack+pingattack
 
 def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection, synfloodattack=synfloodattack,
              pingattack=pingattack):
-    final_rule_sqlinjection = list()
-    final_rule_synfloodattack = list()
-    final_rule_pingattack = list()
+    # final_rule_sqlinjection = list()
+    # final_rule_synfloodattack = list()
+    # final_rule_pingattack = list()
     
     selected_rule_sqlinjection = list()
     selected_rule_synfloodattack = list()
