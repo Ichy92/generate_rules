@@ -91,7 +91,7 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
         dest_port = i[3]
         msg = convert_msg(proto, int(dest_port))
 #         print(msg)
-        flag_dstnya = 'flags:S; threshold: type threshold, track by_dst, count 1, second 60'
+        flag_dstnya = 'flags:S; threshold: type threshold, track by_dst, count 1, seconds 60'
         # flag_dstnya = 'threshold: type threshold, track by_dst, count 1, second 60'
         # flag_dstnya = 'flags:S; thre$; threshold: type threshold, track by_dsc, count 1, second 60'
         rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, flag_dstnya))
