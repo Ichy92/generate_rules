@@ -133,6 +133,7 @@ def save_rules(rules_list, nama_file, alamat = r"/etc/snort/rules/rules_custom/"
     if len(rules_list)>0:
         try:            
             f_out=open(alamat+".rules","w") #ubah a
+            print("saved ->", alamat)
         except:
             print("alamat palsu")
             f_out=open(nama_file+".rules","w")
