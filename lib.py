@@ -28,65 +28,120 @@ def find_used(df, batas_min = 5):
         if i >= batas_min:
             index_final.append(ix)
 
-    final = np.array(data_str)[index_final]
+    final = np.array(unik)[index_final]
     return final
 
 
-with open('old_rules_.json', 'r') as f:
-    temp_rule = json.load(f)
+# with open('old_rules_.json', 'r') as f:
+#     temp_rule = json.load(f)
 # temp_rule = list()
 
-with open('sid.json', 'r') as f:
-    temp_sid = json.load(f)
+# with open('sid.json', 'r') as f:
+#     temp_sid = json.load(f)
     
 # temp_sid = [10000]
 
-def get_rules(final, temp_rule=temp_rule, save = True):
-    final_rule = list()
-    selected_rule = list()
+def get_sid(sqlinjection_sid, selected_rule_sqlinjection):
+    sqlinjection_sid_list =[x for x in range(sqlinjection_sid[-1], sqlinjection_sid[-1]+len(selected_rule_sqlinjection))]
+    sqlinjection_sid_list = sqlinjection_sid + sqlinjection_sid_list
+    return sqlinjection_sid_list
+
+def make_rule(data, sid_list):
+    result = list()
+    for i in range(len(data)):
+        sid = sid_list[i]
+        rule_sid = data[i]+" sid:"+str(sid)+";\n"
+        result.append(rule_sid)
+    return result
+
+def save_json(data, namafile):
+    with open(namafile+'.json', 'w') as f:
+        json.dump(sid_list, f)
+        
+def open_json(nama_file):
+    with open(nama_file+'.json', 'r') as f:
+        temp_rule = json.load(f)
+    return temp_rule
+
+sqlinjection = open_json("sqlinjection")
+synfloodattack = open_json("synfloodattack")
+pingattack = open_json("pingattack")
+
+sqlinjection_sid = open_json("sqlinjection_sid")
+synfloodattack_sid = open_json("synfloodattack_sid")
+pingattack_sid = open_json("pingattack_sid")
+
+temp_rule = sqlinjection+synfloodattack+pingattack
+
+def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection, synfloodattack=synfloodattack,
+             pingattack=pingattack):
+    final_rule_sqlinjection = list()
+    final_rule_synfloodattack = list()
+    final_rule_pingattack = list()
+    
+    selected_rule_sqlinjection = list()
+    selected_rule_synfloodattack = list()
+    selected_rule_pingattack = list()
+    
     for i in final:
         i= i.split()
         proto = i[0]
         source_ip = i[1]
         dest_ip = i[2]
         dest_port = i[3]
-#         print(type(dest_port))
         msg = convert_msg(proto, int(dest_port))
+#         print(msg)
         flag_dstnya = 'flags:S; thre$; threshold: type threshold, track by_dsc, count 1, second 60'
-    #     temp_sid.append(sid)
-        rule_ = str('alert {} {} any -> {} {} any msg: "{}"; {}; rev: 1;'.format(proto, source_ip, dest_ip, dest_port, msg, flag_dstnya))
-    #     print(rule_)
+        rule_ = str('alert {} {} any -> {} {} any (msg: "{}"; {}; rev: 1;'.format(proto, source_ip, dest_ip, dest_port, msg, flag_dstnya))
+        
         if rule_ not in temp_rule:
-            selected_rule.append(rule_)
+            if msg == "sql injection":
+                selected_rule_sqlinjection.append(rule_)
+#                 selected_rule.append(rule_)
+            elif msg == "syn flood attack":
+                selected_rule_synfloodattack.append(rule_)
+            elif msg == "ping attack":
+#                 print(rule_)
+                selected_rule_pingattack.append(rule_)
 
     # print(len(selected_rule))
-    sid_list =[x for x in range(temp_sid[-1], temp_sid[-1]+len(selected_rule))]
-    temp_rule = temp_rule+selected_rule
-    sid_list = temp_sid+sid_list
+    sqlinjection_sid_list = get_sid(sqlinjection_sid, selected_rule_sqlinjection)
+    sqlinjection = sqlinjection + selected_rule_sqlinjection
+    
+    synfloodattack_sid_list = get_sid(synfloodattack_sid, selected_rule_synfloodattack)
+    synfloodattack = synfloodattack + selected_rule_synfloodattack
+    
+    pingattack_sid_list = get_sid(synfloodattack_sid, selected_rule_synfloodattack)
+    pingattack = pingattack + selected_rule_pingattack
     
     if save == True:
-        with open('sid.json', 'w') as f:
-            json.dump(sid_list, f)
-        with open('old_rules_.json', 'w') as f:
-            json.dump(temp_rule, f)
-#     print(sid_list)
-    for i in range(len(temp_rule)):
-        sid = sid_list[i]
-        rule_sid = temp_rule[i]+" sid:"+str(sid)+";\n"
-        final_rule.append(rule_sid)
-    return final_rule
-
-def save_rules(rules_list, alamat = r"/etc/snort/rules/local.rules"):
-    try:            
-        f_out=open(alamat,"w") #ubah a
-    except:
-        f_out=open("local.rules","w")
+        save_json(sqlinjection_sid_list, "sqlinjection_sid")
+        save_json(sqlinjection, "sqlinjection")
+        save_json(synfloodattack_sid_list, "synfloodattack_sid")
+        save_json(synfloodattack, "synfloodattack")
+        save_json(pingattack_sid_list, "pingattack_sid")
+        save_json(pingattack, "pingattack")
         
-    for rule in rules_list:
-        f_out.write(rule)
-    print("succes!")
-    f_out.close()
+    dict_rule = {
+        'sqlinjection':make_rule(sqlinjection, sqlinjection_sid_list),
+        'synfloodattack':make_rule(synfloodattack, synfloodattack_sid_list),
+        'pingattack':make_rule(pingattack, pingattack_sid_list)  
+    }
+    return dict_rule
 
+def save_rules(rules_list, nama_file, alamat = r"/etc/snort/rules/rules_custom"):
+    if len(rules_list)>0:
+        try:            
+            f_out=open(alamat,"w") #ubah a
+        except:
+            f_out=open(nama_file+".rules","w")
+
+        for rule in rules_list:
+            f_out.write(rule)
+        f_out.close()
+    else:
+        pass
+        
 def convert_msg(protocol, port):
     if protocol == 'tcp' and port == 80:
         return "sql injection"
@@ -97,3 +152,10 @@ def convert_msg(protocol, port):
     else:
         return "<possible attack>"
     
+# sqlinjection = open_json(sqlinjection)
+# synfloodattack = open_json(synfloodattack)
+# pingattack = open_json(pingattack)
+
+# sqlinjection_sid = open_json(sqlinjection_sid)
+# synfloodattack_sid = open_json(synfloodattack_sid)
+# pingattack_sid = open_json(pingattack_sid)
