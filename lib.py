@@ -50,7 +50,7 @@ def make_rule(data, sid_list):
     result = list()
     for i in range(len(data)):
         sid = sid_list[i]
-        rule_sid = data[i]+" sid:"+str(sid)+")\n"
+        rule_sid = data[i]+" sid:"+str(sid)+";)\n"
         result.append(rule_sid)
     return result
 
