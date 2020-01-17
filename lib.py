@@ -131,20 +131,25 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
 
 def save_rules(rules_list, nama_file, alamat):
     print(nama_file)
-    if len(rules_list)>0:
-        try:            
-            f_out=open(alamat+".rules","w") #ubah a
-            print("saved ->", alamat+".rules")
-        except:
-            print("alamat palsu")
-            f_out=open(nama_file+".rules","w")
+    f_out=open(alamat+".rules","w")
+    for rule in rules_list:
+        print(rule)
+        f_out.write(rule)
+    f_out.close()
+    # if len(rules_list)>0:
+    #     try:            
+    #         f_out=open(alamat+".rules","w") #ubah a
+    #         print("saved ->", alamat+".rules")
+    #     except:
+    #         print("alamat palsu")
+    #         f_out=open(nama_file+".rules","w")
 
-        for rule in rules_list:
-            print(rule)
-            f_out.write(rule)
-        f_out.close()
-    else:
-        pass
+    #     for rule in rules_list:
+    #         print(rule)
+    #         f_out.write(rule)
+    #     f_out.close()
+    # else:
+    #     pass
         
 def convert_msg(protocol, port):
     if protocol == 'tcp' and port == 80:
