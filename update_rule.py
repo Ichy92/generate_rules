@@ -5,6 +5,7 @@ alamat = r"/etc/snort/rules/rules_custom"
 df = pd.read_csv("databaru.csv", sep=";")
 final = lib.find_used(df, batas_min = 8)
 rules = lib.get_rules(final, save = True)
+# print(rules['sqlinjection'])
 
 lib.save_rules(rules['sqlinjection'], "sqlinjection", alamat)
 print('sql injection!')

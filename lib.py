@@ -91,11 +91,13 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
         dest_port = i[3]
         msg = convert_msg(proto, int(dest_port))
 #         print(msg)
-        flag_dstnya = 'flags:S; thre$; threshold: type threshold, track by_dsc, count 1, second 60'
+        flag_dstnya = 'flags:S; threshold: type threshold, track by_dst, count 1, second 60'
+        # flag_dstnya = 'flags:S; thre$; threshold: type threshold, track by_dsc, count 1, second 60'
         rule_ = str('alert {} {} any -> {} {} any (msg: "{}"; {}; rev: 1;'.format(proto, source_ip, dest_ip, dest_port, msg, flag_dstnya))
         
         if rule_ not in temp_rule:
             if msg == "sql injection":
+                print(rule_)
                 selected_rule_sqlinjection.append(rule_)
 #                 selected_rule.append(rule_)
             elif msg == "syn flood attack":
