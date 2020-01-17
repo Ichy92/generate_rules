@@ -129,10 +129,10 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
     }
     return dict_rule
 
-def save_rules(rules_list, nama_file, alamat = r"/etc/snort/rules/rules_custom"):
+def save_rules(rules_list, nama_file, alamat = r"/etc/snort/rules/rules_custom/"):
     if len(rules_list)>0:
         try:            
-            f_out=open(alamat,"w") #ubah a
+            f_out=open(alamat+".rules","w") #ubah a
         except:
             print("alamat palsu")
             f_out=open(nama_file+".rules","w")
