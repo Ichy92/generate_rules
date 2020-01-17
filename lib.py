@@ -97,7 +97,7 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
         
         if rule_ not in temp_rule:
             if msg == "sql injection":
-                print(rule_)
+                # print(rule_)
                 selected_rule_sqlinjection.append(rule_)
 #                 selected_rule.append(rule_)
             elif msg == "syn flood attack":
