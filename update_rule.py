@@ -9,12 +9,15 @@ print('pingattack', rules['pingattack'])
 print('sqlinjection', rules['sqlinjection'])
 print('synfloodattack', rules['synfloodattack'])
 
-lib.save_rules(rules['sqlinjection'], "sqlinjection", alamat)
-print('sql injection!')
-lib.save_rules(rules['synfloodattack'], "synfloodattack", alamat)
-print('syn flood attack!')
-lib.save_rules(rules['pingattack'], "ping", alamat)
-print('ping attack!')
-print("*"*100)
-print('success!')
-#ds
+try:
+    lib.save_rules(rules['sqlinjection'], "sqlinjection", alamat)
+    print('sql injection!')
+    lib.save_rules(rules['synfloodattack'], "synfloodattack", alamat)
+    print('syn flood attack!')
+    lib.save_rules(rules['pingattack'], "ping", alamat)
+    print('ping attack!')
+    print("*"*100)
+    print('success!')
+    #ds
+except:
+    pass

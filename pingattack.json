@@ -1,1 +1,1 @@
-[]
+["alert icmp 172.10.1.2 any -> 172.10.1.5: 8 (msg: \"ping attack\"; icode:0; itype:8; classtype:bad-unknown;"]

@@ -3,6 +3,8 @@ import numpy as np
 import numpy
 import json
 
+#ubah broo 1650
+
 def to_str(data):
     data = list(data)
     for ix, i in enumerate(data):
@@ -41,10 +43,12 @@ def find_used(df, batas_min = 5):
     
 # temp_sid = [10000]
 
-def get_sid(sqlinjection_sid, selected_rule_sqlinjection):
-    sqlinjection_sid_list =[x for x in range(sqlinjection_sid[-1], sqlinjection_sid[-1]+len(selected_rule_sqlinjection))]
-    sqlinjection_sid_list = sqlinjection_sid + sqlinjection_sid_list
-    return sqlinjection_sid_list
+def get_sid(A_sid, selected_rule_s):
+    print(A_sid[-1], A_sid[-1]+len(selected_rule_s))
+    startA = A_sid[-1]+1
+    sid_list =[x for x in range(startA, startA+len(selected_rule_s))]
+    sid_list = A_sid + sid_list
+    return sid_list
 
 def make_rule(data, sid_list):
     result = list()
@@ -72,6 +76,7 @@ synfloodattack_sid = open_json("synfloodattack_sid")
 pingattack_sid = open_json("pingattack_sid")
 
 temp_rule = sqlinjection+synfloodattack+pingattack
+# print('temp_rule', temp_rule)
 
 def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection, synfloodattack=synfloodattack,
              pingattack=pingattack):
@@ -96,8 +101,11 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
         # flag_dstnya = 'flags:S; thre$; threshold: type threshold, track by_dsc, count 1, second 60'
         # rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, flag_dstnya))
         if msg == "sql injection":
-            opts = 'content:"an$t";nocase'
+            opts = 'content:"and";nocase'
+            opts_or = 'content:"or";nocase'
             rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, opts))
+            rule_or = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, opts_or))
+
         elif msg == "syn flood attack":
             opts = 'flags:S; threshold: type threshold, track by_dst, count 1, seconds 60'
             rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, opts))
@@ -107,17 +115,19 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
             rule_ = str('alert {} {} any -> {} {} (msg: "{}"; {};'.format(proto, source_ip, dest_ip, dest_port, msg, opts))
         else:
             rule_ = None
-        
-        if rule_ not in temp_rule or rule_ != None:
-            if msg == "sql injection":
-                # print(rule_)
-                selected_rule_sqlinjection.append(rule_)
-#                 selected_rule.append(rule_)
-            elif msg == "syn flood attack":
-                selected_rule_synfloodattack.append(rule_)
-            elif msg == "ping attack":
-#                 print(rule_)
-                selected_rule_pingattack.append(rule_)
+            
+        if rule_ != None:
+            if rule_ not in temp_rule:
+                if msg == "sql injection":
+                    # print(rule_)
+                    selected_rule_sqlinjection.append(rule_)
+                    selected_rule_sqlinjection.append(rule_or)
+    #                 selected_rule.append(rule_)
+                elif msg == "syn flood attack":
+                    selected_rule_synfloodattack.append(rule_)
+                elif msg == "ping attack":
+    #                 print(rule_)
+                    selected_rule_pingattack.append(rule_)
         
 
     # print(len(selected_rule))
@@ -127,7 +137,7 @@ def get_rules(final, temp_rule=temp_rule, save = True, sqlinjection=sqlinjection
     synfloodattack_sid_list = get_sid(synfloodattack_sid, selected_rule_synfloodattack)
     synfloodattack = synfloodattack + selected_rule_synfloodattack
     
-    pingattack_sid_list = get_sid(synfloodattack_sid, selected_rule_synfloodattack)
+    pingattack_sid_list = get_sid(pingattack_sid, selected_rule_pingattack)
     pingattack = pingattack + selected_rule_pingattack
     
     if save == True:

@@ -1,1 +1,1 @@
-[]
+["alert tcp 172.10.1.2 any -> 172.10.1.5 80 (msg: \"sql injection\"; content:\"and\";nocase;", "alert tcp 172.10.1.2 any -> 172.10.1.5 80 (msg: \"sql injection\"; content:\"or\";nocase;"]

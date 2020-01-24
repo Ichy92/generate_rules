@@ -1,1 +1,1 @@
-[]
+["alert tcp 172.10.1.2 any -> 172.10.1.5 23 (msg: \"syn flood attack\"; flags:S; threshold: type threshold, track by_dst, count 1, seconds 60;"]
